@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <link rel="stylesheet" href="https://s3-ap-southeast-1.amazonaws.com/spaculus/cdns/css/media.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.11.5/datatables.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap");
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #fdfcfc;
+        color: rgba(0, 0, 0, 0.9);
+        font-family: "Poppins", sans-serif;
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+    .contain {
+        /* position: relative; */
+        text-align: center;
+        color: white;
+    }
+
+    .centered {
+        color: white;
+        text-shadow: 2px 2px 4px #000000;
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    #dataTable td,
+    #dataTable th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    #dataTable tr {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #dataTable tr:nth-child(odd) {
+        background-color: white;
+    }
+
+    #dataTable tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #dataTable tbody tr:hover {
+        /* background-color: #ddd; */
+        font-weight: bold;
+        transform: scale(1.02);
+        cursor: pointer;
+    }
+
+    #dataTable th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #343a40;
+        color: white;
+    }
+
+    .page-item.active .page-link {
+        color: #fff !important;
+        background-color: #343a40 !important;
+        border-color: #343a40 !important;
+    }
+
+    .page-link {
+        color: #343a40 !important;
+        background-color: #fff !important;
+        border: 1px solid #dee2e6 !important;
+    }
+
+    .page-link:hover {
+        color: #fff !important;
+        background-color: #31363a !important;
+        border-color: #31363a !important;
+    }
+</style>
+{% for i in messages %}
+{% if i.tags == "error" %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin: 0px;">
+    <strong>{{i.tags}} !</strong> {{i}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% else %}
+<div class="alert alert-{{i.tags}} alert-dismissible fade show" role="alert" style="margin: 0px;">
+    <strong>{{i.tags}} !</strong> {{i}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endif %}
+{% endfor %}
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="z-index: 9999;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">CAP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'edithistory' %}">Edit History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Your Appointments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'alldoctors' %}">All Doctors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'aboutus' %}">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contactus' %}">Contact Us</a>
+                    </li>
+                </ul>
+                <a class="nav-link active" style="color: #fff;margin: 0rem 1rem;">Hello {{user.username}}</span></a>
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">
+                    Logout
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Alert !</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Hey {{user.username}}, Are you sure to logout ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                <a href="{% url 'logout' %}">
+                                    <button type="button" class="btn btn-success">Logout</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <br><br>
+    <section class="inner-page-banner">
+        <img src="https://s3-ap-southeast-1.amazonaws.com/spaculus/cdns/images/health-beauty-bg.jpg"
+            class="about-banner" alt="Healthcare and beauty">
+        <div class="container">
+            <div class="row contain">
+                <div class="col text-center wow fadeInUp" data-wow-offset="0" data-wow-delay=".4s"
+                    style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+                    <h1 class="centered">Doctor Appointment Booking Web Application</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="container" style="margin-top: 1rem;">
+        <h3 style="margin: 1rem 0rem;background-color: #f3f3f3;padding: 1rem;">Doctor Schedule List</h3>
+        <marquee behavior="" direction="">If you are new to this website then we will ask your medical history. But if
+            you have already filled you history then that history will be used to show to another doctor as well. If you
+            want to change click on edit history present in navbar. </marquee>
+        <table id="dataTable" style="text-align: center;margin-top: 100px;">
+            <thead>
+                <tr>
+                    <th style="text-align: center;">Sr No.</th>
+                    <th style="text-align: center;">Doctor Name</th>
+                    <th style="text-align: center;">Education</th>
+                    <th style="text-align: center;">Speciality</th>
+                    <th style="text-align: center;">Days Available</th>
+                    <th style="text-align: center;">Available Time</th>
+                    <th style="text-align: center;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in docs %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>Dr. {{i.name}}</td>
+                    <td>{{i.degree}}</td>
+                    <td>{{i.speciality}}</td>
+                    <td>
+                        {% for j in docschedule %}
+                        {% if j.Doctor == i %}
+                        {{j.Daysavail}}
+                        {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for j in docschedule %}
+                        {% if j.Doctor == i %}
+                        {{j.Startime}} - {{j.Endtime}}
+                        {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if i.name.username in appos %}
+                        <a href="{% url 'setdr' %}?dr={{i.name}}">
+                            <center><button type="button" class="btn btn-primary">
+                                    View Appointment
+                                </button></center>
+                        </a>
+                        {% else %}
+                        <a href="{% url 'setdoctor' %}?dr={{i.name}}">
+                            <center><button type="button" class="btn btn-primary">
+                                    Get Appointment
+                                </button></center>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+        integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+        crossorigin="anonymous"></script>
+    <footer id="sticky-footer" class="flex-shrink-0 py-4 bg-dark text-white-50" style="margin-top: 3rem ;">
+        <div class="container text-center">
+            <small>Copyright &copy; 2022 | All Rights Reserved.</small>
+        </div>
+    </footer>
+</body>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.11.5/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+</script>
+
+</html>

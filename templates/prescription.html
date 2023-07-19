@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Prescription</title>
+</head>
+{% for i in messages %}
+{% if i.tags == "error" %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="margin: 0px;">
+    <strong>{{i.tags}} !</strong> {{i}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% else %}
+<div class="alert alert-{{i.tags}} alert-dismissible fade show" role="alert" style="margin: 0px;">
+    <strong>{{i.tags}} !</strong> {{i}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endif %}
+{% endfor %}
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="z-index: 9999;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'doctorhome' %}">CAP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url 'doctorhome' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'allprescriptions' %}">All Prescriptions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'aboutus' %}">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contactus' %}">Contact Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Profile</a>
+                    </li>
+                </ul>
+                <a class="nav-link active" style="color: #fff;margin: 0rem 1rem;">Hello Dr. {{user.username}}</span></a>
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal">
+                    Logout
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Alert !</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Hey {{user.username}}, Are you sure to logout ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                <a href="{% url 'logout' %}">
+                                    <button type="button" class="btn btn-success">Logout</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container my-3">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Patient Info
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>Patient Name </strong>: {{patient.name.username}} <br>
+                        <strong>Gender </strong>: {{patient.gender}}<br>
+                        <strong>Address </strong>: {{patient.address}}<br>
+                        <strong>Height </strong>: {{patient.height}} cms<br>
+                        <strong>Weight </strong>: {{patient.weight}} kgs<br>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Patient History
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <strong>Patient Name : </strong>{{history.patient}} <br>
+                        <strong>Allergy : </strong>{{history.allergy}}<br>
+                        <strong>Dieases : </strong>
+                        {% if history.dieases == "" %}
+                        NA
+                        {% else %}
+                        {{history.dieases}}
+                        {% endif %}
+                        <br>
+                        <strong>Other Illness : </strong>{{history.other}}<br>
+                        <strong>List of Operations and Dates : </strong>{{history.operations}}<br>
+                        <strong>List of Current Medications : </strong>{{history.currentmedications}}<br>
+                        <strong>Exercise : </strong>{{history.Exercise}}<br>
+                        <strong>Eating following a diet : </strong>{{history.Eating}}<br>
+                        <strong>Alcohol Consumption : </strong>{{history.Alcohol}}<br>
+                        <strong>Smoking : </strong>{{history.smoke}}<br>
+                        <strong>Caffeine Consumption : </strong>{{history.Caffeine}}<br>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var add = function () {
+                var added = document.createElement("div");
+                document.getElementById("ID").appendChild(added);
+                added.setAttribute('id','Task ' +  + document.getElementById("ID").childElementCount)
+                added.setAttribute("class", "my-3 ");
+                added.setAttribute("style", "display:flex;justify-content: center;align-items: center;");
+
+                adinp = document.createElement("input");
+                addinp = document.createElement("input");
+                adinpt = document.createElement("input");
+                addinpt = document.createElement("input");
+                addspan = document.createElement("span");
+
+                addspan.setAttribute('style','padding: 1rem ;')
+                addspan.innerHTML = "Medicine " + document.getElementById("ID").childElementCount + " : "
+
+                adinp.setAttribute('id','inp '+ document.getElementById("ID").childElementCount)
+                adinp.setAttribute('class','form-control');
+                adinp.setAttribute('style','width:25%;margin-right: 1rem;');
+                adinp.setAttribute('placeholder','Drug Title');
+                adinp.setAttribute("name", "Medi " + document.getElementById("ID").childElementCount);
+                
+                addinp.setAttribute('id','inp '+ document.getElementById("ID").childElementCount)
+                addinp.setAttribute('class','form-control');
+                addinp.setAttribute('style','width:25%;margin-right: 1rem;');
+                addinp.setAttribute('placeholder','Drug Dose');
+                addinp.setAttribute("name", "Dose " + document.getElementById("ID").childElementCount);
+
+                adinpt.setAttribute('id','inp '+ document.getElementById("ID").childElementCount)
+                adinpt.setAttribute('class','form-control');
+                adinpt.setAttribute('style','width:25%;margin-right: 1rem;');
+                adinpt.setAttribute('placeholder','Drug Duration');
+                adinpt.setAttribute("name", "Dura " + document.getElementById("ID").childElementCount);
+                
+                addinpt.setAttribute('id','inp '+ document.getElementById("ID").childElementCount)
+                addinpt.setAttribute('class','form-control');
+                addinpt.setAttribute('style','width:25%;margin-right: 1rem;');
+                addinpt.setAttribute('placeholder','Drug Quantity');
+                addinpt.setAttribute("name", "Quan " + document.getElementById("ID").childElementCount);
+
+                added.appendChild(addspan);
+                added.appendChild(adinp);
+                added.appendChild(addinp)
+                added.appendChild(adinpt)
+                added.appendChild(addinpt)
+            };
+        </script>
+        <center>
+        <form action="{% url 'saveprescription' %}" style="margin: 1rem 0rem;" method="post">
+            {% csrf_token %}
+            <h3 style="font-weight: 300;margin: 1rem 0rem ;">Medicine </h3> 
+            <div id="ID">
+                <div id="Task1" style="display:flex;justify-content: center;align-items: center;">
+                   <span style="padding: 1rem ;">Medicine 1 : </span><input type="text" placeholder="Drug Title" class="form-control" style="width:25%;margin-right: 1rem;" name="Medi 1">
+                    <input type="text" placeholder="Drug Dose" class="form-control" style="width:25%;margin-right: 1rem;" name="Dose 1">
+                    <input type="text" placeholder="Drug Duration" class="form-control" style="width:25%;margin-right: 1rem;" name="Dura 1">
+                    <input type="text" placeholder="Drug Quantity" class="form-control" style="width:25%;margin-right: 1rem;" name="Quan 1">
+                </div>
+            </div>
+            <br>
+            <button class="btn btn-success" type="submit">Submit</button> &nbsp;
+            <button type="button" class="btn btn-info" onclick="add()">Add</button>
+        </form>
+    </center>
+    </div>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+</body>
+
+</html>
